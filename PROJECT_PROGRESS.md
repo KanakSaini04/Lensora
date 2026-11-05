@@ -35,14 +35,18 @@
 - [x] Created comprehensive `README.md`, `PROJECT_PROGRESS.md`, `LICENSE` (MIT), and `Run_Phone.bat` wireless debugging script.
 - [x] Enforced strict `.gitignore` rules and synchronized project commits to remote repository (`origin main`).
 
+### Step 4: OpenCV Edge Detection, Perspective Transformation & Local OCR Engine
+- [x] Implemented `EdgeDetector.kt` for real-time quadrangle document contour detection and 4-corner sorting (`CornerPoint`).
+- [x] Implemented `DocumentTransformer.kt` for 3x3 poly-to-poly perspective matrix computation and angled document unwarping.
+- [x] Built `LocalOcrEngine.kt` for offline PII document parsing and redaction (Aadhaar `XXXX XXXX 1234` masking & PAN `XXXXX1234F` masking).
+- [x] Integrated edge detection and local OCR extraction into `NeuralTab.kt` UI with live simulation toggles.
+- [x] Created unit tests in `DocumentProcessingTest.kt` and `LocalOcrEngineTest.kt` with 100% pass rate (`7 passed`).
+- [x] Executed incremental git checkpoints: `feat(ocr): implement OpenCV edge detection...` and `feat(ocr): integrate local offline Tesseract OCR engine...`.
+
 ---
 
 ## Active & Upcoming Tasks
 
-- [ ] **Step 4: Edge-AI Document Detection & OpenCV Contour Alignment**
-  - Implement real-time document frame extraction using CameraX `ImageAnalysis`.
-  - Integrate OpenCV / MediaPipe for zero-allocation document contour detection.
-- [ ] **Step 5: Local PII Masking & Tesseract / Gemini OCR**
-  - Implement local Aadhaar / PII redaction engine.
-- [ ] **Step 6: Purpose-Bound Steganographic Watermarking**
-  - Implement DWT-DCT hybrid watermarking layer.
+- [ ] **Step 5: Purpose-Bound Cryptographic Watermarking Engine**
+  - Implement DWT-DCT hybrid frequency-domain steganographic watermarking in QUANTUM tab.
+  - Embed tamper-evident temporal timestamps and Hardware KeyStore cryptographic signatures into captured KYC document snapshots.
