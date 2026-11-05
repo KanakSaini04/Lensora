@@ -1,5 +1,8 @@
 package com.kanak.lensora.ui
 
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -17,11 +20,14 @@ import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -35,7 +41,7 @@ enum class FlightDeckTab(val title: String, val subtitle: String, val icon: Imag
 }
 
 /**
- * Material 3 Frosted Glass 4-Tab Navigation Flight-Deck interface.
+ * Material 3 Frosted Glass 4-Tab Navigation Flight-Deck interface with Spring Physics & Micro-Haptic Snapping.
  */
 @Composable
 fun FlightDeckNavigationBar(
@@ -43,6 +49,8 @@ fun FlightDeckNavigationBar(
     onTabSelected: (FlightDeckTab) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val hapticFeedback = LocalHapticFeedback.current
+
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -61,12 +69,30 @@ fun FlightDeckNavigationBar(
         ) {
             FlightDeckTab.entries.forEach { tab ->
                 val isSelected = tab == selectedTab
+                val scale by animateFloatAsState(
+                    targetValue = if (isSelected) 1.15f else 1.0f,
+                    animationSpec = spring(
+                        dampingRatio = Spring.DampingRatioMediumBouncy,
+                        stiffness = Spring.StiffnessMediumLow
+                    ),
+                    label = "TabSpringScale"
+                )
+
                 val accentColor = if (isSelected) Color(0xFF00E676) else Color.Gray
 
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
-                        .clickable { onTabSelected(tab) }
+                        .graphicsLayer {
+                            scaleX = scale
+                            scaleY = scale
+                        }
+                        .clickable {
+                            if (!isSelected) {
+                                hapticFeedback.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                                onTabSelected(tab)
+                            }
+                        }
                         .padding(horizontal = 8.dp, vertical = 6.dp)
                 ) {
                     Icon(
