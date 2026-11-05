@@ -10,6 +10,30 @@ import androidx.camera.camera2.interop.ExperimentalCamera2Interop
 import androidx.camera.core.CameraInfo
 
 /**
+ * Adaptive pixel-binning modes supported by the 200MP Samsung ISOCELL HP3 sensor.
+ */
+enum class PixelBinningMode(val displayName: String, val pixelSizeMicrons: Float) {
+    NIGHT_12_5MP("12.5MP Night (16-in-1 Tetra²pixel)", 2.24f),
+    PORTRAIT_50MP("50MP Portrait (4-in-1 Tetra pixel)", 1.12f),
+    ULTRA_HD_200MP("200MP Ultra-HD (Full Resolution)", 0.56f)
+}
+
+/**
+ * In-sensor crop region representation for lossless digital zoom.
+ */
+data class SensorCropRegion(
+    val left: Int,
+    val top: Int,
+    val right: Int,
+    val bottom: Int
+) {
+    val width: Int get() = right - left
+    val height: Int get() = bottom - top
+
+    fun toAndroidRect(): Rect = Rect(left, top, right, bottom)
+}
+
+/**
  * Encapsulates physical hardware capabilities for a camera sensor lens.
  */
 data class LensCapabilities(
@@ -22,11 +46,13 @@ data class LensCapabilities(
     val minFocusDistanceDiopters: Float? = null,
     val isFixedFocus: Boolean = true,
     val supportsManualFocus: Boolean = false,
+    val hasOis: Boolean = false,
     val activeArraySize: Rect? = null,
     val availableApertures: FloatArray = floatArrayOf(),
     val focalLengths: FloatArray = floatArrayOf(),
     val isRawSupported: Boolean = false,
-    val hardwareLevel: Int = CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_LIMITED
+    val hardwareLevel: Int = CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_LIMITED,
+    val activeBinningMode: PixelBinningMode = PixelBinningMode.ULTRA_HD_200MP
 ) {
     val isoRange: Range<Int>?
         get() = if (isoMin != null && isoMax != null) Range(isoMin, isoMax) else null
@@ -40,6 +66,18 @@ data class LensCapabilities(
      */
     fun canOverrideFocusManually(): Boolean {
         return !isFixedFocus && supportsManualFocus && (minFocusDistanceDiopters != null && minFocusDistanceDiopters > 0.0f)
+    }
+
+    /**
+     * Calculates the in-sensor crop region [SCALER_CROP_REGION] for lossless zoom.
+     */
+    fun calculateInSensorCropRegion(zoomRatio: Float, fullWidth: Int = 16384, fullHeight: Int = 12288): SensorCropRegion {
+        if (zoomRatio <= 1.0f) return SensorCropRegion(0, 0, fullWidth, fullHeight)
+        val cropWidth = (fullWidth / zoomRatio).toInt().coerceAtLeast(1)
+        val cropHeight = (fullHeight / zoomRatio).toInt().coerceAtLeast(1)
+        val left = (fullWidth - cropWidth) / 2
+        val top = (fullHeight - cropHeight) / 2
+        return SensorCropRegion(left, top, left + cropWidth, top + cropHeight)
     }
 
     /**
@@ -81,11 +119,13 @@ data class LensCapabilities(
         if (minFocusDistanceDiopters != other.minFocusDistanceDiopters) return false
         if (isFixedFocus != other.isFixedFocus) return false
         if (supportsManualFocus != other.supportsManualFocus) return false
+        if (hasOis != other.hasOis) return false
         if (activeArraySize != other.activeArraySize) return false
         if (!availableApertures.contentEquals(other.availableApertures)) return false
         if (!focalLengths.contentEquals(other.focalLengths)) return false
         if (isRawSupported != other.isRawSupported) return false
         if (hardwareLevel != other.hardwareLevel) return false
+        if (activeBinningMode != other.activeBinningMode) return false
 
         return true
     }
@@ -100,11 +140,13 @@ data class LensCapabilities(
         result = 31 * result + (minFocusDistanceDiopters?.hashCode() ?: 0)
         result = 31 * result + isFixedFocus.hashCode()
         result = 31 * result + supportsManualFocus.hashCode()
+        result = 31 * result + hasOis.hashCode()
         result = 31 * result + (activeArraySize?.hashCode() ?: 0)
         result = 31 * result + availableApertures.contentHashCode()
         result = 31 * result + focalLengths.contentHashCode()
         result = 31 * result + isRawSupported.hashCode()
         result = 31 * result + hardwareLevel
+        result = 31 * result + activeBinningMode.hashCode()
         return result
     }
 }
@@ -133,6 +175,9 @@ object HardwareCapabilitiesInspector {
         val hwLevel = camera2Info.getCameraCharacteristic(CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL)
             ?: CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_LIMITED
 
+        val oisModes = camera2Info.getCameraCharacteristic(CameraCharacteristics.LENS_INFO_AVAILABLE_OPTICAL_STABILIZATION)
+        val hasOis = oisModes?.contains(CameraMetadata.LENS_OPTICAL_STABILIZATION_MODE_ON) == true
+
         val capabilitiesKeys = camera2Info.getCameraCharacteristic(CameraCharacteristics.REQUEST_AVAILABLE_CAPABILITIES)
         val isRawSupported = capabilitiesKeys?.contains(CameraCharacteristics.REQUEST_AVAILABLE_CAPABILITIES_RAW) == true
 
@@ -152,6 +197,7 @@ object HardwareCapabilitiesInspector {
             minFocusDistanceDiopters = minFocusDistance,
             isFixedFocus = isFixedFocus,
             supportsManualFocus = supportsManualFocus,
+            hasOis = hasOis,
             activeArraySize = activeArray,
             availableApertures = apertures,
             focalLengths = focalLengths,
@@ -174,6 +220,9 @@ object HardwareCapabilitiesInspector {
         val hwLevel = characteristics.get(CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL)
             ?: CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_LIMITED
 
+        val oisModes = characteristics.get(CameraCharacteristics.LENS_INFO_AVAILABLE_OPTICAL_STABILIZATION)
+        val hasOis = oisModes?.contains(CameraMetadata.LENS_OPTICAL_STABILIZATION_MODE_ON) == true
+
         val capabilitiesKeys = characteristics.get(CameraCharacteristics.REQUEST_AVAILABLE_CAPABILITIES)
         val isRawSupported = capabilitiesKeys?.contains(CameraCharacteristics.REQUEST_AVAILABLE_CAPABILITIES_RAW) == true
 
@@ -193,6 +242,7 @@ object HardwareCapabilitiesInspector {
             minFocusDistanceDiopters = minFocusDistance,
             isFixedFocus = isFixedFocus,
             supportsManualFocus = supportsManualFocus,
+            hasOis = hasOis,
             activeArraySize = activeArray,
             availableApertures = apertures,
             focalLengths = focalLengths,
