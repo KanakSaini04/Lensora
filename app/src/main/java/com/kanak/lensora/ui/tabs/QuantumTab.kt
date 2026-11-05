@@ -16,7 +16,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Fingerprint
-import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -39,14 +38,14 @@ import androidx.compose.ui.unit.sp
 
 /**
  * QUANTUM Tab: Zero-Shutter-Lag (ZSL) Pre-Capture Ring Buffers, Gyro Super-Resolution Stacking,
- * Ghost-Mode Crowd Eraser, and Purpose-Bound EXIF Cryptographic Watermarking Engine.
+ * Ghost-Mode Crowd Eraser, and Camera Hardware KeyStore EXIF Signature Engine.
  */
 @Composable
 fun QuantumTab(modifier: Modifier = Modifier) {
     var zslBufferActive by remember { mutableStateOf(true) }
     var gyroSuperResActive by remember { mutableStateOf(true) }
     var ghostModeCrowdEraserActive by remember { mutableStateOf(false) }
-    var purposeBoundWatermarkActive by remember { mutableStateOf(true) }
+    var exifHardwareSignatureActive by remember { mutableStateOf(true) }
 
     Column(
         modifier = modifier
@@ -56,10 +55,10 @@ fun QuantumTab(modifier: Modifier = Modifier) {
             .verticalScroll(rememberScrollState())
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(imageVector = Icons.Default.Shield, contentDescription = "Quantum", tint = Color(0xFF06B6D4))
+            Icon(imageVector = Icons.Default.AutoAwesome, contentDescription = "Quantum", tint = Color(0xFF06B6D4))
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "QUANTUM ENGINE • ZSL & SECURITY",
+                text = "QUANTUM ENGINE • ZSL & MULTI-FRAME",
                 style = MaterialTheme.typography.titleMedium.copy(
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
@@ -68,7 +67,7 @@ fun QuantumTab(modifier: Modifier = Modifier) {
             )
         }
         Text(
-            text = "0.5s ZSL Circular Ring Buffer, Gyro Super-Res & Purpose-Bound Watermarking",
+            text = "0.5s ZSL Circular Ring Buffer, Gyro Super-Res & Hardware KeyStore Signatures",
             fontSize = 12.sp,
             color = Color.Gray,
             fontFamily = FontFamily.Monospace
@@ -100,13 +99,13 @@ fun QuantumTab(modifier: Modifier = Modifier) {
                 QuantumToggleRow("0.5s ZSL Circular Pre-Capture Buffer", zslBufferActive) { zslBufferActive = it }
                 QuantumToggleRow("Gyro-Subpixel Super-Resolution Stacking", gyroSuperResActive) { gyroSuperResActive = it }
                 QuantumToggleRow("Ghost-Mode Moving Crowd Eraser", ghostModeCrowdEraserActive) { ghostModeCrowdEraserActive = it }
-                QuantumToggleRow("Purpose-Bound Cryptographic Watermarking", purposeBoundWatermarkActive) { purposeBoundWatermarkActive = it }
+                QuantumToggleRow("Hardware KeyStore EXIF Signature", exifHardwareSignatureActive) { exifHardwareSignatureActive = it }
             }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Cryptographic Status Card
+        // Hardware KeyStore & EXIF Cryptography Card
         Card(
             modifier = Modifier.fillMaxWidth(),
             colors = CardDefaults.cardColors(containerColor = Color(0xFF082F49)),
@@ -114,10 +113,10 @@ fun QuantumTab(modifier: Modifier = Modifier) {
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(imageVector = Icons.Default.Fingerprint, contentDescription = "Cryptographic", tint = Color(0xFF06B6D4))
+                    Icon(imageVector = Icons.Default.Fingerprint, contentDescription = "Hardware EXIF", tint = Color(0xFF06B6D4))
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "PURPOSE-BOUND CRYPTOGRAPHY",
+                        text = "HARDWARE EXIF SIGNATURE & PROVENANCE",
                         fontWeight = FontWeight.Bold,
                         color = Color.White,
                         fontFamily = FontFamily.Monospace,
@@ -125,10 +124,10 @@ fun QuantumTab(modifier: Modifier = Modifier) {
                     )
                 }
                 Spacer(modifier = Modifier.height(10.dp))
-                QuantumStatusRow("Watermark Intent", "Digital KYC Verification Only")
-                QuantumStatusRow("Temporal Timestamp", "Crypto-Hashed Device Epoch")
-                QuantumStatusRow("Steganographic Layer", "DWT-DCT Hybrid Frequency Domain")
-                QuantumStatusRow("Tamper Protection", "Hardware KeyStore Signed")
+                QuantumStatusRow("RAW DNG Format", "Uncompressed 16-bit DNG + JPEG")
+                QuantumStatusRow("Temporal Epoch", "Hardware GPS & Crypto-Hashed Timestamp")
+                QuantumStatusRow("Sensor Calibration", "Redmi Note 13 Pro 5G ISOCELL Matrix")
+                QuantumStatusRow("Tamper Protection", "KeyStore Hardware-Backed Signature")
             }
         }
     }
