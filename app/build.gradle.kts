@@ -5,11 +5,7 @@ plugins {
 
 android {
     namespace = "com.project.lensora"
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.project.lensora"
@@ -35,6 +31,11 @@ android {
     buildFeatures {
         compose = true
     }
+    testOptions {
+        unitTests {
+            isReturnDefaultValues = true
+        }
+    }
 }
 
 dependencies {
@@ -53,7 +54,9 @@ dependencies {
     implementation(libs.androidx.camera.camera2)
     implementation(libs.androidx.camera.lifecycle)
     implementation(libs.androidx.camera.extensions)
-    implementation(libs.androidx.camera.viewfinder.compose)
+    implementation(libs.androidx.camera.viewfinder.compose) {
+        exclude(group = "androidx.camera", module = "camera-viewfinder-core")
+    }
     implementation(libs.androidx.camera.mlkit.vision)
 
     // MediaPipe Tasks Vision

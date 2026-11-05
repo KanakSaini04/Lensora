@@ -16,7 +16,6 @@
     <uses-feature android:name="android.hardware.camera.manual_sensor" android:required="false" />
     <uses-feature android:name="android.hardware.camera.manual_post_processing" android:required="false" />
     <uses-feature android:name="android.hardware.camera.raw" android:required="false" />
-    <uses-feature android:name="android.hardware.camera.capability.raw" android:required="false" />
     <uses-feature android:name="android.hardware.camera.level.full" android:required="false" />
 
     <application
