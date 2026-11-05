@@ -1,4 +1,4 @@
-package com.project.lensora.ui.tabs
+package com.kanak.lensora.ui.tabs
 
 import androidx.camera.core.Camera
 import androidx.camera.core.CameraSelector
@@ -33,9 +33,9 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.project.lensora.camera.HardwareCapabilitiesInspector
-import com.project.lensora.camera.LensCapabilities
-import com.project.lensora.ui.camera.CameraPreviewView
+import com.kanak.lensora.camera.HardwareCapabilitiesInspector
+import com.kanak.lensora.camera.LensCapabilities
+import com.kanak.lensora.ui.camera.CameraPreviewView
 
 /**
  * RIG Tab: Full-screen Camera Viewfinder with 120Hz deferred Compose state read telemetry HUD.

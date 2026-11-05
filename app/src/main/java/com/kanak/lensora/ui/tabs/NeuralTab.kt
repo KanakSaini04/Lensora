@@ -1,4 +1,4 @@
-package com.project.lensora.ui.tabs
+package com.kanak.lensora.ui.tabs
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -36,8 +36,8 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.project.lensora.ocr.EdgeDetector
-import com.project.lensora.ocr.LocalOcrEngine
+import com.kanak.lensora.ocr.EdgeDetector
+import com.kanak.lensora.ocr.LocalOcrEngine
 
 /**
  * NEURAL Tab: Edge-AI Document Detection, OpenCV Perspective Unwarping, Local OCR & PII Masking Engine.

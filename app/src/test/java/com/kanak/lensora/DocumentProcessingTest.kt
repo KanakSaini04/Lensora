@@ -1,9 +1,9 @@
-package com.project.lensora
+package com.kanak.lensora
 
-import com.project.lensora.ocr.CornerPoint
-import com.project.lensora.ocr.DocumentCornerPoints
-import com.project.lensora.ocr.DocumentTransformer
-import com.project.lensora.ocr.EdgeDetector
+import com.kanak.lensora.ocr.CornerPoint
+import com.kanak.lensora.ocr.DocumentCornerPoints
+import com.kanak.lensora.ocr.DocumentTransformer
+import com.kanak.lensora.ocr.EdgeDetector
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -12,10 +12,10 @@ class DocumentProcessingTest {
     @Test
     fun testCornerSorting() {
         val unsorted = listOf(
-            CornerPoint(800f, 600f), // Bottom-Right
-            CornerPoint(100f, 100f), // Top-Left
-            CornerPoint(100f, 600f), // Bottom-Left
-            CornerPoint(800f, 100f)  // Top-Right
+            CornerPoint(800f, 600f),
+            CornerPoint(100f, 100f),
+            CornerPoint(100f, 600f),
+            CornerPoint(800f, 100f)
         )
 
         val corners = EdgeDetector.sortCornerPoints(unsorted)

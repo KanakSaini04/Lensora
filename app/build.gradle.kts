@@ -4,13 +4,13 @@ plugins {
 }
 
 android {
-    namespace = "com.project.lensora"
+    namespace = "com.kanak.lensora"
     compileSdk = 37
 
     defaultConfig {
-        applicationId = "com.project.lensora"
-        minSdk = 26
-        targetSdk = 36
+        applicationId = "com.kanak.lensora"
+        minSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -48,6 +48,10 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+
+    // Kotlin Coroutines
+    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.kotlinx.coroutines.core)
 
     // CameraX 1.6.2
     implementation(libs.androidx.camera.core)

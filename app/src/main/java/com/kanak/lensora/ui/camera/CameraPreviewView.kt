@@ -1,4 +1,4 @@
-package com.project.lensora.ui.camera
+package com.kanak.lensora.ui.camera
 
 import androidx.camera.core.Camera
 import androidx.camera.core.CameraSelector

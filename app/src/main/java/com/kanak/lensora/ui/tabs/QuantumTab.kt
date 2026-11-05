@@ -1,4 +1,4 @@
-package com.project.lensora.ui.tabs
+package com.kanak.lensora.ui.tabs
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column

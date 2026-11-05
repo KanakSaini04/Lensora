@@ -1,4 +1,4 @@
-package com.project.lensora.camera
+package com.kanak.lensora.camera
 
 import android.graphics.Rect
 import android.hardware.camera2.CameraCharacteristics

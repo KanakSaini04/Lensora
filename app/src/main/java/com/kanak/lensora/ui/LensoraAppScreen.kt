@@ -1,4 +1,4 @@
-package com.project.lensora.ui
+package com.kanak.lensora.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -34,11 +34,11 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.project.lensora.camera.LensCapabilities
-import com.project.lensora.ui.tabs.NeuralTab
-import com.project.lensora.ui.tabs.OpticsTab
-import com.project.lensora.ui.tabs.QuantumTab
-import com.project.lensora.ui.tabs.RigTab
+import com.kanak.lensora.camera.LensCapabilities
+import com.kanak.lensora.ui.tabs.NeuralTab
+import com.kanak.lensora.ui.tabs.OpticsTab
+import com.kanak.lensora.ui.tabs.QuantumTab
+import com.kanak.lensora.ui.tabs.RigTab
 
 /**
  * Main Lensora Container Screen featuring the 4-tab architecture:

@@ -1,4 +1,4 @@
-package com.project.lensora.ui.tabs
+package com.kanak.lensora.ui.tabs
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -14,7 +14,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Tune
@@ -38,7 +37,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.project.lensora.camera.LensCapabilities
+import com.kanak.lensora.camera.LensCapabilities
 
 /**
  * OPTICS Tab: Displays hardware optics specs, aperture, focal length, and fixed-focus safety status.

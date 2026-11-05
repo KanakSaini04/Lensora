@@ -1,4 +1,4 @@
-package com.project.lensora.ocr
+package com.kanak.lensora.ocr
 
 /**
  * Data structure holding parsed and PII-sanitized KYC document fields extracted locally.

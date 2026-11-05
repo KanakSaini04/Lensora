@@ -1,4 +1,4 @@
-package com.project.lensora.ocr
+package com.kanak.lensora.ocr
 
 import android.graphics.Matrix
 

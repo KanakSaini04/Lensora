@@ -1,4 +1,4 @@
-package com.project.lensora
+package com.kanak.lensora
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -19,8 +19,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.core.content.ContextCompat
-import com.project.lensora.ui.LensoraAppScreen
-import com.project.lensora.ui.theme.LensoraTheme
+import com.kanak.lensora.ui.LensoraAppScreen
+import com.kanak.lensora.ui.theme.LensoraTheme
 
 class MainActivity : ComponentActivity() {
 

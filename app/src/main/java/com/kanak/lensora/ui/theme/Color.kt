@@ -1,4 +1,4 @@
-package com.project.lensora.ui.theme
+package com.kanak.lensora.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

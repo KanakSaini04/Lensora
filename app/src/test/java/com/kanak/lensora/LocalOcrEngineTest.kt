@@ -1,6 +1,6 @@
-package com.project.lensora
+package com.kanak.lensora
 
-import com.project.lensora.ocr.LocalOcrEngine
+import com.kanak.lensora.ocr.LocalOcrEngine
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
