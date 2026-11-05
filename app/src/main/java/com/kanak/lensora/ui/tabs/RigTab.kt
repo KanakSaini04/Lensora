@@ -19,9 +19,12 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -29,16 +32,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kanak.lensora.camera.HardwareCapabilitiesInspector
 import com.kanak.lensora.camera.LensCapabilities
+import com.kanak.lensora.optics.HapticDialState
 import com.kanak.lensora.ui.camera.CameraPreviewView
 
 /**
- * RIG Tab: Full-screen Camera Viewfinder with 120Hz deferred Compose state read telemetry HUD.
+ * RIG Tab: Full-screen Camera Viewfinder with 120Hz deferred Compose state read telemetry HUD
+ * and 2160Hz tactile haptic rotary scrubbers for ISO, Shutter Speed, Kelvin WB, and Focus Diopters.
  */
 @Composable
 fun RigTab(
@@ -46,6 +53,13 @@ fun RigTab(
     onCapabilitiesUpdated: (LensCapabilities) -> Unit = {}
 ) {
     var capabilities by remember { mutableStateOf(LensCapabilities()) }
+    val hapticDialState = remember { HapticDialState() }
+    val hapticFeedback = LocalHapticFeedback.current
+
+    var currentIso by remember { mutableFloatStateOf(100f) }
+    var currentShutter by remember { mutableFloatStateOf(125f) }
+    var currentKelvin by remember { mutableFloatStateOf(5500f) }
+    var currentFocusDiopter by remember { mutableFloatStateOf(0.0f) }
 
     Box(modifier = modifier.fillMaxSize()) {
         // Camera Viewfinder Stream
@@ -59,83 +73,102 @@ fun RigTab(
             }
         )
 
-        // Telemetry HUD Overlay with Deferred Graphics Layer Rendering (120Hz smooth)
-        Card(
+        // Telemetry & Tactile Scrubbers HUD Overlay
+        Column(
             modifier = Modifier
                 .align(Alignment.TopStart)
-                .padding(16.dp)
-                .fillMaxWidth(0.92f)
-                .graphicsLayer {
-                    shadowElevation = 8f
-                    shape = RoundedCornerShape(12.dp)
-                    clip = true
-                },
-            colors = CardDefaults.cardColors(
-                containerColor = Color.Black.copy(alpha = 0.75f)
-            )
+                .padding(12.dp)
+                .fillMaxWidth()
         ) {
-            Column(modifier = Modifier.padding(14.dp)) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            imageVector = Icons.Default.Sensors,
-                            contentDescription = "Sensor",
-                            tint = Color(0xFF00E676)
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = "RIG TELEMETRY • ISOCELL HP3",
-                            style = MaterialTheme.typography.labelLarge.copy(
-                                fontWeight = FontWeight.Bold,
-                                color = Color.White,
-                                fontFamily = FontFamily.Monospace
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .graphicsLayer {
+                        shadowElevation = 8f
+                        shape = RoundedCornerShape(14.dp)
+                        clip = true
+                    },
+                colors = CardDefaults.cardColors(
+                    containerColor = Color.Black.copy(alpha = 0.80f)
+                )
+            ) {
+                Column(modifier = Modifier.padding(14.dp)) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                imageVector = Icons.Default.Sensors,
+                                contentDescription = "Sensor",
+                                tint = Color(0xFF00E676)
                             )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = "RIG TELEMETRY • ISOCELL HP3",
+                                style = MaterialTheme.typography.labelLarge.copy(
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color.White,
+                                    fontFamily = FontFamily.Monospace
+                                )
+                            )
+                        }
+                        Text(
+                            text = if (capabilities.isRawSupported) "RAW READ" else "JPEG ONLY",
+                            color = if (capabilities.isRawSupported) Color(0xFF00E676) else Color(0xFFFFB74D),
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = FontFamily.Monospace
                         )
                     }
-                    Text(
-                        text = if (capabilities.isRawSupported) "RAW READ" else "JPEG ONLY",
-                        color = if (capabilities.isRawSupported) Color(0xFF00E676) else Color(0xFFFFB74D),
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = FontFamily.Monospace
-                    )
-                }
 
-                Spacer(modifier = Modifier.height(10.dp))
+                    Spacer(modifier = Modifier.height(10.dp))
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    TelemetryItem(
-                        label = "ISO RANGE",
-                        value = if (capabilities.isoMin != null && capabilities.isoMax != null) {
-                            "${capabilities.isoMin} - ${capabilities.isoMax}"
-                        } else "ISO 50 - 6400"
+                    // Haptic Scrubber Controls
+                    ScrubberRow(
+                        label = "ISO (${currentIso.toInt()})",
+                        value = currentIso,
+                        valueRange = 50f..6400f,
+                        onValueChange = { newVal ->
+                            currentIso = hapticDialState.updateIso(newVal) {
+                                hapticFeedback.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                            }
+                        }
                     )
-                    TelemetryItem(
-                        label = "EXPOSURE (NS)",
-                        value = capabilities.formattedExposureTimeRange()
-                    )
-                }
 
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    TelemetryItem(
-                        label = "ACTIVE ARRAY",
-                        value = capabilities.activeArraySize?.let { "${it.width()}x${it.height()}" } ?: "200MP ISOCELL"
+                    ScrubberRow(
+                        label = "SHUTTER (1/${currentShutter.toInt()}s)",
+                        value = currentShutter,
+                        valueRange = 1f..8000f,
+                        onValueChange = { newVal ->
+                            currentShutter = hapticDialState.updateShutter(newVal) {
+                                hapticFeedback.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                            }
+                        }
                     )
-                    TelemetryItem(
-                        label = "CAMERA ID",
-                        value = capabilities.cameraId.ifEmpty { "0 (Back Main)" }
+
+                    ScrubberRow(
+                        label = "KELVIN WB (${currentKelvin.toInt()}K)",
+                        value = currentKelvin,
+                        valueRange = 2000f..10000f,
+                        onValueChange = { newVal ->
+                            currentKelvin = hapticDialState.updateKelvinWb(newVal) {
+                                hapticFeedback.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                            }
+                        }
+                    )
+
+                    ScrubberRow(
+                        label = "FOCUS (${"%.1f".format(currentFocusDiopter)}D)",
+                        value = currentFocusDiopter,
+                        valueRange = 0f..10f,
+                        enabled = capabilities.canOverrideFocusManually(),
+                        onValueChange = { newVal ->
+                            currentFocusDiopter = hapticDialState.updateFocusDiopter(newVal) {
+                                hapticFeedback.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                            }
+                        }
                     )
                 }
             }
@@ -144,20 +177,30 @@ fun RigTab(
 }
 
 @Composable
-private fun TelemetryItem(label: String, value: String) {
-    Column {
-        Text(
-            text = label,
-            fontSize = 9.sp,
-            color = Color.LightGray,
-            fontFamily = FontFamily.Monospace
-        )
-        Text(
-            text = value,
-            fontSize = 12.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = Color.White,
-            fontFamily = FontFamily.Monospace
+private fun ScrubberRow(
+    label: String,
+    value: Float,
+    valueRange: ClosedFloatingPointRange<Float>,
+    enabled: Boolean = true,
+    onValueChange: (Float) -> Unit
+) {
+    Column(modifier = Modifier.fillMaxWidth().padding(vertical = 2.dp)) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(text = label, fontSize = 10.sp, color = if (enabled) Color.LightGray else Color.Gray, fontFamily = FontFamily.Monospace)
+        }
+        Slider(
+            value = value,
+            onValueChange = onValueChange,
+            valueRange = valueRange,
+            enabled = enabled,
+            colors = SliderDefaults.colors(
+                thumbColor = Color(0xFF00E676),
+                activeTrackColor = Color(0xFF00E676),
+                inactiveTrackColor = Color.DarkGray
+            )
         )
     }
 }

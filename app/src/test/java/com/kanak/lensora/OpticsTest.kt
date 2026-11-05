@@ -31,7 +31,7 @@ class OpticsTest {
             val initial = awaitItem()
             assertEquals(100f, initial.currentValue, 0.01f)
 
-            dialState.setIso(800f)
+            dialState.updateIso(800f)
             val updated = awaitItem()
             assertEquals(800f, updated.currentValue, 0.01f)
         }

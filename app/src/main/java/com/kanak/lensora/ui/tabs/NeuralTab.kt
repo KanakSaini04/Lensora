@@ -14,6 +14,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.CropFree
 import androidx.compose.material.icons.filled.Psychology
 import androidx.compose.material.icons.filled.Security
@@ -23,6 +24,8 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -40,7 +43,8 @@ import com.kanak.lensora.ocr.EdgeDetector
 import com.kanak.lensora.ocr.LocalOcrEngine
 
 /**
- * NEURAL Tab: Edge-AI Document Detection, OpenCV Perspective Unwarping, Local OCR & PII Masking Engine.
+ * NEURAL Tab: Edge-AI Document Detection, OpenCV Perspective Unwarping, Local OCR,
+ * 3D Pose Skeleton Director, Iris-Lock Blink-Proof Trigger, and Acoustic Shutter.
  */
 @Composable
 fun NeuralTab(modifier: Modifier = Modifier) {
@@ -53,6 +57,11 @@ fun NeuralTab(modifier: Modifier = Modifier) {
 
     val cornerPoints = remember { EdgeDetector.detectDocumentCorners(1080, 1920) }
 
+    // AI Director Toggles
+    var poseSkeletonActive by remember { mutableStateOf(true) }
+    var irisLockActive by remember { mutableStateOf(true) }
+    var airGestureShutterActive by remember { mutableStateOf(false) }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -64,7 +73,7 @@ fun NeuralTab(modifier: Modifier = Modifier) {
             Icon(imageVector = Icons.Default.Psychology, contentDescription = "Neural", tint = Color(0xFFA855F7))
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "NEURAL ENGINE • EDGE-AI",
+                text = "NEURAL ENGINE • AI DIRECTORS",
                 style = MaterialTheme.typography.titleMedium.copy(
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
@@ -73,11 +82,40 @@ fun NeuralTab(modifier: Modifier = Modifier) {
             )
         }
         Text(
-            text = "Local OpenCV Document Edge Unwarping & Offline PII Masking OCR",
+            text = "MediaPipe 3D Pose Director, Iris-Lock Trigger & Local PII OCR Engine",
             fontSize = 12.sp,
             color = Color.Gray,
             fontFamily = FontFamily.Monospace
         )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // AI Co-Pilot Director Toggles Card
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(containerColor = Color(0xFF1E293B)),
+            shape = RoundedCornerShape(12.dp)
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(imageVector = Icons.Default.AutoAwesome, contentDescription = "AI Directors", tint = Color(0xFFA855F7))
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "SMART AI DIRECTORS & TRIGGERS",
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White,
+                        fontFamily = FontFamily.Monospace,
+                        fontSize = 13.sp
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                NeuralToggleRow("3D Pose Skeleton Director", poseSkeletonActive) { poseSkeletonActive = it }
+                NeuralToggleRow("Iris-Lock Blink-Proof Trigger", irisLockActive) { irisLockActive = it }
+                NeuralToggleRow("Air-Gesture / Acoustic Click Shutter", airGestureShutterActive) { airGestureShutterActive = it }
+            }
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -169,6 +207,24 @@ fun NeuralTab(modifier: Modifier = Modifier) {
                 NeuralStatusRow("Inference Latency", "12ms (Zero Cloud Latency)")
             }
         }
+    }
+}
+
+@Composable
+private fun NeuralToggleRow(label: String, checked: Boolean, onCheckedChange: (Boolean) -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(text = label, color = Color.White, fontSize = 11.sp, fontFamily = FontFamily.Monospace)
+        Switch(
+            checked = checked,
+            onCheckedChange = onCheckedChange,
+            colors = SwitchDefaults.colors(checkedThumbColor = Color(0xFFC084FC), checkedTrackColor = Color(0xFF581C87))
+        )
     }
 }
 

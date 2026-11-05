@@ -14,6 +14,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Tune
@@ -24,6 +25,8 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -40,7 +43,8 @@ import androidx.compose.ui.unit.sp
 import com.kanak.lensora.camera.LensCapabilities
 
 /**
- * OPTICS Tab: Displays hardware optics specs, aperture, focal length, and fixed-focus safety status.
+ * OPTICS Tab: Displays hardware optics specs, aperture, focal length, fixed-focus safety status,
+ * and live assistant toggles for False Color, Zebra Stripes, Focus Peaking, Depth Radar, and Starlight Booster.
  */
 @Composable
 fun OpticsTab(
@@ -50,6 +54,13 @@ fun OpticsTab(
     var selectedLensIndex by remember { mutableStateOf(1) } // 0: 0.6x Ultrawide, 1: 1x Main, 2: Telephoto/Macro
     val lensNames = listOf("0.6x Ultrawide", "1x Main (200MP)", "Macro / Telephoto")
 
+    // Live Assistant Shader & Radar Toggles
+    var focusPeakingActive by remember { mutableStateOf(true) }
+    var zebraStripesActive by remember { mutableStateOf(false) }
+    var falseColorActive by remember { mutableStateOf(false) }
+    var depthRadarActive by remember { mutableStateOf(true) }
+    var starlightBoosterActive by remember { mutableStateOf(false) }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -58,7 +69,7 @@ fun OpticsTab(
             .verticalScroll(rememberScrollState())
     ) {
         Text(
-            text = "OPTICS & LENS INSPECTOR",
+            text = "OPTICS & ASSISTANT CONTROL",
             style = MaterialTheme.typography.titleMedium.copy(
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
@@ -66,7 +77,7 @@ fun OpticsTab(
             )
         )
         Text(
-            text = "Redmi Note 13 Pro 5G ISOCELL HP3 Module Telemetry",
+            text = "AGSL Shaders & Redmi Note 13 Pro 5G ISOCELL HP3 Module",
             fontSize = 12.sp,
             color = Color.Gray,
             fontFamily = FontFamily.Monospace
@@ -100,7 +111,38 @@ fun OpticsTab(
             }
         }
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // AGSL Shaders & Radar Toggles Card
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(containerColor = Color(0xFF1E293B)),
+            shape = RoundedCornerShape(12.dp)
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(imageVector = Icons.Default.AutoAwesome, contentDescription = "Shaders", tint = Color(0xFF00E676))
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "AGSL GPU SHADER ASSISTANTS",
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White,
+                        fontFamily = FontFamily.Monospace,
+                        fontSize = 13.sp
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                ToggleRow("Neon Cyan Focus Peaking", focusPeakingActive) { focusPeakingActive = it }
+                ToggleRow("Zebra Stripes (>94% Overexposure)", zebraStripesActive) { zebraStripesActive = it }
+                ToggleRow("ARRI False Color Exposure Map", falseColorActive) { falseColorActive = it }
+                ToggleRow("Dual-Axis Gyro Depth Radar", depthRadarActive) { depthRadarActive = it }
+                ToggleRow("Starlight Night-Vision Booster", starlightBoosterActive) { starlightBoosterActive = it }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
 
         // Fixed Focus Safety Card
         Card(
@@ -183,18 +225,26 @@ fun OpticsTab(
                         if (it > 0f) "${"%.2f".format(it)} Diopters (${"%.1f".format(100f / it)} cm)" else "Fixed Focus (0.0 D)"
                     } ?: "10.0 cm Macro Focus"
                 )
-
-                OpticsDetailRow(
-                    label = "Fixed Focus Lens",
-                    value = if (capabilities.isFixedFocus) "Yes" else "No (Variable Focus)"
-                )
-
-                OpticsDetailRow(
-                    label = "Manual Focus Support",
-                    value = if (capabilities.supportsManualFocus) "Supported" else "Disabled / Auto Only"
-                )
             }
         }
+    }
+}
+
+@Composable
+private fun ToggleRow(label: String, checked: Boolean, onCheckedChange: (Boolean) -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(text = label, color = Color.White, fontSize = 11.sp, fontFamily = FontFamily.Monospace)
+        Switch(
+            checked = checked,
+            onCheckedChange = onCheckedChange,
+            colors = SwitchDefaults.colors(checkedThumbColor = Color(0xFF00E676), checkedTrackColor = Color(0xFF064E3B))
+        )
     }
 }
 
