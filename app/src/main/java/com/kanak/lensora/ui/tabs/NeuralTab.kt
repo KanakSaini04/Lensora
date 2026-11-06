@@ -31,11 +31,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 
 /**
  * NEURAL Tab: AI Photo Co-Pilot, 3D Pose Skeleton Director, Iris-Lock Blink-Proof Trigger,
@@ -52,27 +49,26 @@ fun NeuralTab(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(Color(0xFF0F172A))
+            .background(MaterialTheme.colorScheme.background)
             .padding(16.dp)
             .verticalScroll(rememberScrollState())
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(imageVector = Icons.Default.Psychology, contentDescription = "Neural", tint = Color(0xFFA855F7))
+            Icon(imageVector = Icons.Default.Psychology, contentDescription = "Neural", tint = MaterialTheme.colorScheme.primary)
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = "NEURAL ENGINE • AI DIRECTORS",
                 style = MaterialTheme.typography.titleMedium.copy(
                     fontWeight = FontWeight.Bold,
-                    color = Color.White,
-                    fontFamily = FontFamily.Monospace
+                    color = MaterialTheme.colorScheme.onBackground
                 )
             )
         }
         Text(
             text = "MediaPipe 3D Pose Director, Iris-Lock Trigger & Real-Time Scene Classifier",
-            fontSize = 12.sp,
-            color = Color.Gray,
-            fontFamily = FontFamily.Monospace
+            style = MaterialTheme.typography.bodyMedium.copy(
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -80,19 +76,19 @@ fun NeuralTab(modifier: Modifier = Modifier) {
         // AI Co-Pilot Director Toggles Card
         Card(
             modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFF1E293B)),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
             shape = RoundedCornerShape(12.dp)
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(imageVector = Icons.Default.AutoAwesome, contentDescription = "AI Directors", tint = Color(0xFFA855F7))
+                    Icon(imageVector = Icons.Default.AutoAwesome, contentDescription = "AI Directors", tint = MaterialTheme.colorScheme.primary)
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = "SMART AI DIRECTORS & TRIGGERS",
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White,
-                        fontFamily = FontFamily.Monospace,
-                        fontSize = 13.sp
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
                     )
                 }
 
@@ -110,19 +106,19 @@ fun NeuralTab(modifier: Modifier = Modifier) {
         // Real-time MediaPipe Scene Classification Card
         Card(
             modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFF0F2942)),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
             shape = RoundedCornerShape(12.dp)
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(imageVector = Icons.Default.CameraEnhance, contentDescription = "Scene AI", tint = Color(0xFF00E676))
+                    Icon(imageVector = Icons.Default.CameraEnhance, contentDescription = "Scene AI", tint = MaterialTheme.colorScheme.primary)
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = "MEDIAPIPE SCENE CLASSIFIER",
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White,
-                        fontFamily = FontFamily.Monospace,
-                        fontSize = 13.sp
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
                     )
                 }
                 Spacer(modifier = Modifier.height(10.dp))
@@ -144,11 +140,19 @@ private fun NeuralToggleRow(label: String, checked: Boolean, onCheckedChange: (B
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = label, color = Color.White, fontSize = 11.sp, fontFamily = FontFamily.Monospace)
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodyMedium.copy(
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        )
         Switch(
             checked = checked,
             onCheckedChange = onCheckedChange,
-            colors = SwitchDefaults.colors(checkedThumbColor = Color(0xFFC084FC), checkedTrackColor = Color(0xFF581C87))
+            colors = SwitchDefaults.colors(
+                checkedThumbColor = MaterialTheme.colorScheme.primary,
+                checkedTrackColor = MaterialTheme.colorScheme.primaryContainer
+            )
         )
     }
 }
@@ -162,7 +166,18 @@ private fun NeuralStatusRow(label: String, value: String) {
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = "• $label: ", color = Color.LightGray, fontSize = 11.sp, fontFamily = FontFamily.Monospace)
-        Text(text = value, color = Color(0xFFC084FC), fontSize = 11.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace)
+        Text(
+            text = "• $label: ",
+            style = MaterialTheme.typography.bodyMedium.copy(
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        )
+        Text(
+            text = value,
+            style = MaterialTheme.typography.bodyMedium.copy(
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary
+            )
+        )
     }
 }

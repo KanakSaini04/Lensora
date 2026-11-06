@@ -30,11 +30,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 
 /**
  * QUANTUM Tab: Zero-Shutter-Lag (ZSL) Pre-Capture Ring Buffers, Gyro Super-Resolution Stacking,
@@ -50,27 +47,26 @@ fun QuantumTab(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(Color(0xFF0F172A))
+            .background(MaterialTheme.colorScheme.background)
             .padding(16.dp)
             .verticalScroll(rememberScrollState())
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(imageVector = Icons.Default.AutoAwesome, contentDescription = "Quantum", tint = Color(0xFF06B6D4))
+            Icon(imageVector = Icons.Default.AutoAwesome, contentDescription = "Quantum", tint = MaterialTheme.colorScheme.primary)
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = "QUANTUM ENGINE • ZSL & MULTI-FRAME",
                 style = MaterialTheme.typography.titleMedium.copy(
                     fontWeight = FontWeight.Bold,
-                    color = Color.White,
-                    fontFamily = FontFamily.Monospace
+                    color = MaterialTheme.colorScheme.onBackground
                 )
             )
         }
         Text(
             text = "0.5s ZSL Circular Ring Buffer, Gyro Super-Res & Hardware KeyStore Signatures",
-            fontSize = 12.sp,
-            color = Color.Gray,
-            fontFamily = FontFamily.Monospace
+            style = MaterialTheme.typography.bodyMedium.copy(
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -78,19 +74,19 @@ fun QuantumTab(modifier: Modifier = Modifier) {
         // ZSL & Super-Res Engine Card
         Card(
             modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFF1E293B)),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
             shape = RoundedCornerShape(12.dp)
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(imageVector = Icons.Default.AutoAwesome, contentDescription = "Multi-frame", tint = Color(0xFF06B6D4))
+                    Icon(imageVector = Icons.Default.AutoAwesome, contentDescription = "Multi-frame", tint = MaterialTheme.colorScheme.primary)
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = "MULTI-FRAME STACKING & ZSL BUFFERS",
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White,
-                        fontFamily = FontFamily.Monospace,
-                        fontSize = 13.sp
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
                     )
                 }
 
@@ -108,19 +104,19 @@ fun QuantumTab(modifier: Modifier = Modifier) {
         // Hardware KeyStore & EXIF Cryptography Card
         Card(
             modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFF082F49)),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
             shape = RoundedCornerShape(12.dp)
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(imageVector = Icons.Default.Fingerprint, contentDescription = "Hardware EXIF", tint = Color(0xFF06B6D4))
+                    Icon(imageVector = Icons.Default.Fingerprint, contentDescription = "Hardware EXIF", tint = MaterialTheme.colorScheme.primary)
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = "HARDWARE EXIF SIGNATURE & PROVENANCE",
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White,
-                        fontFamily = FontFamily.Monospace,
-                        fontSize = 13.sp
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
                     )
                 }
                 Spacer(modifier = Modifier.height(10.dp))
@@ -142,11 +138,19 @@ private fun QuantumToggleRow(label: String, checked: Boolean, onCheckedChange: (
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = label, color = Color.White, fontSize = 11.sp, fontFamily = FontFamily.Monospace)
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodyMedium.copy(
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        )
         Switch(
             checked = checked,
             onCheckedChange = onCheckedChange,
-            colors = SwitchDefaults.colors(checkedThumbColor = Color(0xFF22D3EE), checkedTrackColor = Color(0xFF075985))
+            colors = SwitchDefaults.colors(
+                checkedThumbColor = MaterialTheme.colorScheme.primary,
+                checkedTrackColor = MaterialTheme.colorScheme.primaryContainer
+            )
         )
     }
 }
@@ -160,7 +164,18 @@ private fun QuantumStatusRow(label: String, value: String) {
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = "• $label: ", color = Color.LightGray, fontSize = 11.sp, fontFamily = FontFamily.Monospace)
-        Text(text = value, color = Color(0xFF22D3EE), fontSize = 11.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace)
+        Text(
+            text = "• $label: ",
+            style = MaterialTheme.typography.bodyMedium.copy(
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        )
+        Text(
+            text = value,
+            style = MaterialTheme.typography.bodyMedium.copy(
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary
+            )
+        )
     }
 }

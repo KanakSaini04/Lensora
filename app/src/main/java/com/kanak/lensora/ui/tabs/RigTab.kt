@@ -30,14 +30,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.kanak.lensora.camera.HardwareCapabilitiesInspector
 import com.kanak.lensora.camera.LensCapabilities
 import com.kanak.lensora.optics.HapticDialState
@@ -85,14 +82,14 @@ fun RigTab(
                     .fillMaxWidth()
                     .graphicsLayer {
                         shadowElevation = 8f
-                        shape = RoundedCornerShape(14.dp)
+                        shape = RoundedCornerShape(16.dp)
                         clip = true
                     },
                 colors = CardDefaults.cardColors(
-                    containerColor = Color.Black.copy(alpha = 0.80f)
+                    containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.88f)
                 )
             ) {
-                Column(modifier = Modifier.padding(14.dp)) {
+                Column(modifier = Modifier.padding(16.dp)) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween,
@@ -102,28 +99,27 @@ fun RigTab(
                             Icon(
                                 imageVector = Icons.Default.Sensors,
                                 contentDescription = "Sensor",
-                                tint = Color(0xFF00E676)
+                                tint = MaterialTheme.colorScheme.primary
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
                                 text = "RIG TELEMETRY • ISOCELL HP3",
-                                style = MaterialTheme.typography.labelLarge.copy(
+                                style = MaterialTheme.typography.titleMedium.copy(
                                     fontWeight = FontWeight.Bold,
-                                    color = Color.White,
-                                    fontFamily = FontFamily.Monospace
+                                    color = MaterialTheme.colorScheme.onSurface
                                 )
                             )
                         }
                         Text(
                             text = if (capabilities.isRawSupported) "RAW READ" else "JPEG ONLY",
-                            color = if (capabilities.isRawSupported) Color(0xFF00E676) else Color(0xFFFFB74D),
-                            fontSize = 10.sp,
-                            fontWeight = FontWeight.Bold,
-                            fontFamily = FontFamily.Monospace
+                            style = MaterialTheme.typography.labelMedium.copy(
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.primary
+                            )
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(10.dp))
+                    Spacer(modifier = Modifier.height(12.dp))
 
                     // Haptic Scrubber Controls
                     ScrubberRow(
@@ -189,7 +185,12 @@ private fun ScrubberRow(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(text = label, fontSize = 10.sp, color = if (enabled) Color.LightGray else Color.Gray, fontFamily = FontFamily.Monospace)
+            Text(
+                text = label,
+                style = MaterialTheme.typography.labelMedium.copy(
+                    color = if (enabled) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            )
         }
         Slider(
             value = value,
@@ -197,9 +198,9 @@ private fun ScrubberRow(
             valueRange = valueRange,
             enabled = enabled,
             colors = SliderDefaults.colors(
-                thumbColor = Color(0xFF00E676),
-                activeTrackColor = Color(0xFF00E676),
-                inactiveTrackColor = Color.DarkGray
+                thumbColor = MaterialTheme.colorScheme.primary,
+                activeTrackColor = MaterialTheme.colorScheme.primary,
+                inactiveTrackColor = MaterialTheme.colorScheme.surfaceVariant
             )
         )
     }

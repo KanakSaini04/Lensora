@@ -35,11 +35,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.kanak.lensora.camera.LensCapabilities
 
 /**
@@ -64,7 +61,7 @@ fun OpticsTab(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(Color(0xFF0F172A))
+            .background(MaterialTheme.colorScheme.background)
             .padding(16.dp)
             .verticalScroll(rememberScrollState())
     ) {
@@ -72,15 +69,14 @@ fun OpticsTab(
             text = "OPTICS & ASSISTANT CONTROL",
             style = MaterialTheme.typography.titleMedium.copy(
                 fontWeight = FontWeight.Bold,
-                color = Color.White,
-                fontFamily = FontFamily.Monospace
+                color = MaterialTheme.colorScheme.onBackground
             )
         )
         Text(
             text = "AGSL Shaders & Redmi Note 13 Pro 5G ISOCELL HP3 Module",
-            fontSize = 12.sp,
-            color = Color.Gray,
-            fontFamily = FontFamily.Monospace
+            style = MaterialTheme.typography.bodyMedium.copy(
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -96,16 +92,16 @@ fun OpticsTab(
                     Button(
                         onClick = { selectedLensIndex = index },
                         modifier = Modifier.weight(1f),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2563EB))
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
                     ) {
-                        Text(name, fontSize = 10.sp, fontWeight = FontWeight.Bold, maxLines = 1)
+                        Text(name, style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold, maxLines = 1)
                     }
                 } else {
                     OutlinedButton(
                         onClick = { selectedLensIndex = index },
                         modifier = Modifier.weight(1f)
                     ) {
-                        Text(name, fontSize = 10.sp, color = Color.White, maxLines = 1)
+                        Text(name, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurface, maxLines = 1)
                     }
                 }
             }
@@ -116,19 +112,19 @@ fun OpticsTab(
         // AGSL Shaders & Radar Toggles Card
         Card(
             modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFF1E293B)),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
             shape = RoundedCornerShape(12.dp)
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(imageVector = Icons.Default.AutoAwesome, contentDescription = "Shaders", tint = Color(0xFF00E676))
+                    Icon(imageVector = Icons.Default.AutoAwesome, contentDescription = "Shaders", tint = MaterialTheme.colorScheme.primary)
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = "AGSL GPU SHADER ASSISTANTS",
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White,
-                        fontFamily = FontFamily.Monospace,
-                        fontSize = 13.sp
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
                     )
                 }
 
@@ -148,7 +144,7 @@ fun OpticsTab(
         Card(
             modifier = Modifier.fillMaxWidth(),
             colors = CardDefaults.cardColors(
-                containerColor = if (capabilities.canOverrideFocusManually()) Color(0xFF064E3B) else Color(0xFF4C1D95)
+                containerColor = MaterialTheme.colorScheme.primaryContainer
             ),
             shape = RoundedCornerShape(12.dp)
         ) {
@@ -159,24 +155,25 @@ fun OpticsTab(
                 Icon(
                     imageVector = if (capabilities.canOverrideFocusManually()) Icons.Default.CheckCircle else Icons.Default.Lock,
                     contentDescription = "Safety Status",
-                    tint = Color.White
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer
                 )
                 Spacer(modifier = Modifier.width(12.dp))
                 Column {
                     Text(
                         text = if (capabilities.canOverrideFocusManually()) "MANUAL OVERRIDE READY" else "FIXED FOCUS SAFETY LOCK",
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White,
-                        fontFamily = FontFamily.Monospace,
-                        fontSize = 13.sp
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
                     )
                     Text(
                         text = if (capabilities.canOverrideFocusManually())
                             "Lens supports manual diopter overrides without risk of crash."
                         else
                             "Auxiliary lens is fixed focus. Manual focus diopter override safely disabled.",
-                        color = Color.LightGray,
-                        fontSize = 11.sp
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            color = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
                     )
                 }
             }
@@ -187,19 +184,19 @@ fun OpticsTab(
         // Optical Parameters Card
         Card(
             modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFF1E293B)),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
             shape = RoundedCornerShape(12.dp)
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(imageVector = Icons.Default.Tune, contentDescription = "Params", tint = Color(0xFF38BDF8))
+                    Icon(imageVector = Icons.Default.Tune, contentDescription = "Params", tint = MaterialTheme.colorScheme.primary)
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = "HARDWARE SPECIFICATIONS",
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White,
-                        fontFamily = FontFamily.Monospace,
-                        fontSize = 14.sp
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
                     )
                 }
 
@@ -239,11 +236,19 @@ private fun ToggleRow(label: String, checked: Boolean, onCheckedChange: (Boolean
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = label, color = Color.White, fontSize = 11.sp, fontFamily = FontFamily.Monospace)
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodyMedium.copy(
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        )
         Switch(
             checked = checked,
             onCheckedChange = onCheckedChange,
-            colors = SwitchDefaults.colors(checkedThumbColor = Color(0xFF00E676), checkedTrackColor = Color(0xFF064E3B))
+            colors = SwitchDefaults.colors(
+                checkedThumbColor = MaterialTheme.colorScheme.primary,
+                checkedTrackColor = MaterialTheme.colorScheme.primaryContainer
+            )
         )
     }
 }
@@ -256,7 +261,18 @@ private fun OpticsDetailRow(label: String, value: String) {
             .padding(vertical = 6.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = label, color = Color.Gray, fontSize = 12.sp, fontFamily = FontFamily.Monospace)
-        Text(text = value, color = Color.White, fontSize = 12.sp, fontWeight = FontWeight.SemiBold, fontFamily = FontFamily.Monospace)
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodyMedium.copy(
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        )
+        Text(
+            text = value,
+            style = MaterialTheme.typography.bodyMedium.copy(
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+        )
     }
 }
